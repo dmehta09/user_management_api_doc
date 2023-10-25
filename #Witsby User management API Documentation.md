@@ -2,7 +2,7 @@
 ​
 The following is the API documentation for the described services, organized by platform and functionality.
 ​
-## SalesForce (SF) API
+## SalesForce (SF) APIs
 ​
 ### Account Creation using SF
 ​
