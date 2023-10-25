@@ -989,8 +989,8 @@ query GetUniqueStates($country: String!) {
 ​
   - **8.2 Attempt mutation without providing required fields**
 ​
-    - **Given**: User is authorized but sends incomplete account data.
-    - **When**: User sends a mutation request.
+    - **Given**: Users is authorized but sends incomplete account data.
+    - **When**: Users sends a mutation request.
     - **Then**: Server responds with status `400 Bad Request`.
 ​
   - **8.3 Attempt mutation without authorization**
