@@ -255,7 +255,7 @@ The following is the API documentation for the described services, organized by 
     - **Then**: Server responds with status `409 Conflict`.
 ​
 
-#### 2. Automatic Update of Account
+#### 2. Automatic Update of Account(For renewal)
 ​
 - **GraphQL Mutation**:
 ​
@@ -467,18 +467,30 @@ The following is the API documentation for the described services, organized by 
 
 ### Organization Hierarchy - CRUD Levels
 ​
-#### **1. Fetch Levels (READ)**
+
+#### **1. Fetch Institution Account (READ)**
 ​
 - **GraphQL Query**:
 ​
   ```graphql
-  query {
-    hierarchyLevels {
-      id
-      name
-      description
-    }
+  query GetInstitution($institutionId: String, $ascdId: String) {
+  institution(id: $institutionId, ascdId: $ascdId) {
+    _id
+    name
+    iconSrc
+    subscriberType
+    ascdId
+    subscriptionInfo
+    salesforceAccountID
+    city
+    state
+    postalCode
+    country
+    status
   }
+  }
+
+
   ```
 ​
 - **Headers**:
@@ -491,17 +503,29 @@ The following is the API documentation for the described services, organized by 
 ​
   ```json
   {
-      "data": {
-          "hierarchyLevels": [
-              {
-                  "id": "123",
-                  "name": "Level 1",
-                  "description": "Description of level 1"
-              },
-              ...
-          ]
-      }
+  "data": {
+    "institution": {
+      "_id": "123",
+      "name": "Example Institution",
+      "iconSrc": "path/to/icon",
+      "subscriberType": "University",
+      "ascdId": "ASCD123",
+      "subscriptionInfo": {
+        "plan": "Premium",
+        "startDate": "2023-01-01",
+        "endDate": "2024-12-31"
+      },
+      "salesforceAccountID": "SF54321",
+      "city": "New City",
+      "state": "NY",
+      "postalCode": "54321",
+      "country": "United States",
+      "status": "Pending Setup"
+    }
   }
+  }
+
+
   ```
 ​
 - **Error Handling**:
@@ -510,45 +534,73 @@ The following is the API documentation for the described services, organized by 
   - GraphQL errors are encapsulated in the `errors` array in the response.
 ​
 - **Test Scenarios**
-  - Fetch all levels with valid authorization.
-  - Fetch levels without authorization.
+  - Retrieve account information for the institution with valid authorization.
+  - Retrieve account information for the institution without authorization.
   - Test with an invalid token.
 ​
 - **Test Cases**
-  - 1.1 **Fetch all levels with valid authorization**
+  - 1.1 **Retrieve Account Information with Valid Authorization**
     - **Given**: User is authorized and sends a valid `Authorization` header.
-    - **When**: User sends a `GET` request to fetch levels.
+    - **When**: User sends a query to retrieve account information for the institution.
     - **Then**: Server responds with status `200 OK` and returns a list of levels.
-  - 1.2 **Fetch levels without authorization**
+  - 1.2 **Retrieve Account Information without Authorization**
     - **Given**: User does not send an `Authorization` header.
-    - **When**: User sends a `GET` request to fetch levels.
+    - **When**: User sends a query to retrieve account information for the institution.
     - **Then**: Server responds with status `401 Unauthorized`.
   - 1.3 **Test with an invalid token**
     - **Given**: User sends an invalid `Authorization` header.
-    - **When**: User sends a `GET` request to fetch levels.
+    - **When**: User sends a query to retrieve account information for the institution.
     - **Then**: Server responds with status `401 Unauthorized`.
+
+
 ​
----
-​
-#### **2. Create Level (CREATE)**
+#### **2. Create/Update/Remove Level**
 ​
 - **GraphQL Mutation**:
 ​
   ```graphql
-  mutation {
-    createHierarchyLevel(input: {name: "Level Name", description: "Description for this level"}) {
+  mutation UpdateInstitution($updateInstitutionInput: UpdateInstitutionInput!) {
+  updateInstitution(updateInstitutionInput: $updateInstitutionInput) {
+    _id
+    name
+    structure {
       id
-      name
+      organizationId
+      title
       description
+      level
+      type
+      parentId
+      createdAt
+      updatedAt
+    }
+    hierarchies {
+      id
+      internalId
+      title
+      structureId
+      sortingOrder
+      parentId
+      author {
+        id
+        name
+        avatarUrl
+        organization {
+          id
+          name
+        }
+      }
+      lastUpdatedInfo {
+        updatedAt
+      }
+      createdAt
     }
   }
+  }
+
   ```
 ​
-- **Validation**:
-  - **Input**:
-    - `name`: Required, string, max-length: 100.
-    - `description`: Optional, string, max-length: 500.
-  - Ensure the input does not contain malicious code or SQL injections.
+
 ​
 - **Headers**:
   - `Authorization`: Bearer token for authentication.
@@ -560,14 +612,40 @@ The following is the API documentation for the described services, organized by 
 ​
   ```json
   {
-      "data": {
-          "createHierarchyLevel": {
-              "id": "123",
-              "name": "Level Name",
-              "description": "Description for this level"
-          }
+  "data": {
+    "updateInstitution": {
+      "_id": "123",
+      "name": "Updated Institution Name",
+      "structure": [
+        {
+        "id": "456",
+        "organizationId": "org123",
+        "title": "District",
+        "description": "Updated Structure Description",
+        "level": "1",
+        "type": "Department",
+        "parentId": "0",
+        "createdAt": "2023-01-01T12:00:00Z",
+        "updatedAt": "2023-01-02T14:30:00Z"
+      },
+      {
+        "id": "457",
+        "organizationId": "org124",
+        "title": "School",
+        "description": "Updated Structure Description",
+        "level": "2",
+        "type": "Department",
+        "parentId": "1",
+        "createdAt": "2023-01-01T12:00:00Z",
+        "updatedAt": "2023-01-02T14:30:00Z"
+      },
+      ]
+      
       }
+    }
   }
+  
+
   ```
 ​
 - **Error Handling**:
@@ -577,25 +655,25 @@ The following is the API documentation for the described services, organized by 
   - GraphQL errors (like validation issues) are encapsulated in the `errors` array in the response.
 ​
 - **Test Scenarios**
-  - Create a new level with valid data and authorization.
-  - Create a level without providing required fields.
-  - Create a level without authorization.
-  - Create a level with an existing name.
+  - Create or Update a new level with valid data and authorization.
+  - Create or Update a level without providing required fields.
+  - Create or Update a level without authorization.
+  - Create or Update a level with an existing name.
 ​
 - **Test Cases**
 ​
-  - 2.1 **Create a new level with valid data and authorization**
+  - 2.1 **Create or Update a new level with valid data and authorization**
     - **Given**: User is authorized and sends a valid `Authorization` header with valid level data.
     - **When**: User sends a `POST` request to create a level.
     - **Then**: Server responds with status `200 OK` and returns the created level.
 ​
-  - 2.2 **Create a level without providing required fields**
+  - 2.2 **Create or Update a level without providing required fields**
 ​
     - **Given**: User is authorized but sends incomplete level data.
     - **When**: User sends a `POST` request to create a level.
     - **Then**: Server responds with status `400 Bad Request`.
 ​
-  - 2.3 **Create a level without authorization**
+  - 2.3 **Create or Update a level without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid level data.
     - **When**: User sends a `POST` request to create a level.
@@ -609,26 +687,53 @@ The following is the API documentation for the described services, organized by 
 ​
 ---
 ​
-#### **3. Update Level (UPDATE)**
+#### **3. Create or Update Organisation Hierarchy**
 ​
 - **GraphQL Mutation**:
 ​
   ```graphql
-  mutation {
-    updateHierarchyLevel(id: "123", input: {name: "Updated Level Name", description: "Updated description"}) {
+   mutation UpdateInstitution($updateInstitutionInput: UpdateInstitutionInput!) {
+  updateInstitution(updateInstitutionInput: $updateInstitutionInput) {
+    _id
+    name
+    structure {
       id
-      name
+      organizationId
+      title
       description
+      level
+      type
+      parentId
+      createdAt
+      updatedAt
+    }
+    hierarchies {
+      id
+      internalId
+      title
+      structureId
+      sortingOrder
+      parentId
+      author {
+        id
+        name
+        avatarUrl
+        organization {
+          id
+          name
+        }
+      }
+      lastUpdatedInfo {
+        updatedAt
+      }
+      createdAt
     }
   }
+  }
+
   ```
 ​
-- **Validation**:
-  - **Input**:
-    - `id`: Required, unique identifier for the level.
-    - `name`: Optional, string, max-length: 100.
-    - `description`: Optional, string, max-length: 500.
-  - Ensure the input does not contain malicious entities.
+
 ​
 - **Headers**:
   - `Authorization`: Bearer token for authentication.
@@ -640,41 +745,91 @@ The following is the API documentation for the described services, organized by 
 ​
   ```json
   {
-      "data": {
-          "updateHierarchyLevel": {
-              "id": "123",
-              "name": "Updated Level Name",
-              "description": "Updated description"
-          }
+  "data": {
+    "updateInstitution": {
+      "_id": "123",
+      "name": "Updated Institution Name",
+      "structure": {
+        "id": "456",
+        "organizationId": "org123",
+        "title": "District",
+        "description": "Updated Structure Description",
+        "level": "1",
+        "type": "Department",
+        "parentId": "789",
+        "createdAt": "2023-01-01T12:00:00Z",
+        "updatedAt": "2023-01-02T14:30:00Z"
+      },
+      "hierarchies": [
+        {
+          "id": "101",
+          "internalId": "hier123",
+          "title": "District Name",
+          "structureId": "456",
+          "sortingOrder": 1,
+          "parentId": "102",
+          "author": {
+            "id": "author456",
+            "name": "John Doe",
+            "avatarUrl": "path/to/avatar",
+            "organization": {
+              "id": "org456",
+              "name": "Example Org"
+            }
+          },
+          "lastUpdatedInfo": {
+            "updatedAt": "2023-01-03T10:15:00Z"
+          },
+          "createdAt": "2023-01-03T10:00:00Z"
+        }
+      ]
       }
+    }
   }
+  
+
+  
+
   ```
 ​
 - **Error Handling**:
-  - `400 Bad Request`: For validation errors or malformed GraphQL.
+  - `400 Bad Request`: For validation errors, malformed GraphQL.
   - `401 Unauthorized`: Invalid or missing token.
-  - `404 Not Found`: If the level with the given `id` does not exist.
-  - GraphQL errors are encapsulated in the `errors` array in the response.
+  - `409 Conflict`: If a hierarchies with the same name already exists.
+  - GraphQL errors (like validation issues) are encapsulated in the `errors` array in the response.
 ​
 - **Test Scenarios**
-  - Update an existing level with valid data and authorization.
-  - Update a level without providing required fields.
-  - Update a level without authorization.
-  - Update a non-existing level.
+  - Create or Update a new hierarchies with valid data and authorization.
+  - Create or Update a hierarchies without providing required fields.
+  - Create or Update a hierarchies without authorization.
+  - Create or Update a hierarchies with an existing name.
 ​
 - **Test Cases**
 ​
-  - 3.1 **Update an existing level with valid data and authorization**
-    - **Given**: User is authorized, sends a valid `Authorization` header, and provides valid level data for an existing level.
-    - **When**: User sends a `PUT` request to update a level.
-    - **Then**: Server responds with status `200 OK` and returns the updated level.
+  - 3.1 **Create or Update a new hierarchies with valid data and authorization**
+    - **Given**: User is authorized and sends a valid `Authorization` header with valid level data.
+    - **When**: User sends a `POST` request to create a level.
+    - **Then**: Server responds with status `200 OK` and returns the created level.
 ​
-  - 3.2 **Update a level without providing required fields**
-    - **Given**: User is authorized but sends incomplete level data.
-    - **When**: User sends a `PUT` request to update a level.
+  - 3.2 **Create or Update a hierarchies without providing required fields**
+​
+    - **Given**: User is authorized but sends incomplete hierarchies data.
+    - **When**: User sends a `POST` request to create a hierarchies.
     - **Then**: Server responds with status `400 Bad Request`.
 ​
-  - 3.3 **Update a level withou...
+  - 3.3 **Create or Update a hierarchies without authorization**
+​
+    - **Given**: User does not send an `Authorization` header but provides valid hierarchies data.
+    - **When**: User sends a `POST` request to hierarchies a level.
+    - **Then**: Server responds with status `401 Unauthorized`.
+​
+  - 3.4 **Create a hierarchies with an existing name**
+​
+    - **Given**: User is authorized and sends a name that already exists in the system.
+    - **When**: User sends a `POST` request to create a hierarchies.
+    - **Then**: Server responds with status `409 Conflict`.
+​
+ 
 
 #### **4. Fetch Districts (READ)
 
@@ -694,7 +849,7 @@ query {
       searchText: "YourSearchText"  # Text to search for
     }
   }) {
-    SchoolsOrDistrict {
+    District {
       _id
       Inst_UID
       Institution_Name_Proper
