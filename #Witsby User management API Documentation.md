@@ -91,7 +91,7 @@ The following is the API documentation for the described services, organized by 
     status: String!
     email: String
     phoneNumber: String
-    ... [other fields]
+    
     }
     ```
 ​
@@ -188,9 +188,6 @@ The following is the API documentation for the described services, organized by 
     }
 
      ```
-
-​
-
 ​
   - **Response**:
 ​
@@ -297,7 +294,6 @@ The following is the API documentation for the described services, organized by 
     status: String!
     email: String
     phoneNumber: String
-    ... [other fields]
     }
     ```
 ​
@@ -1425,12 +1421,176 @@ query GetUniqueStates($country: String!) {
     - **When**: User sends a mutation to update a district's information.
     - **Then**: Server responds with status `401 Unauthorized`.
 
-#### 8. Update Custom School
+
+#### 8.Create Custom District or School 
 ​
 - **GraphQL Mutation**:
 ​
     ```graphql
-    mutation UpdateSchool($updateSchoolInput: UpdateSchoolInput!) {
+  mutation CreateCustomSchoolAndDistrict($customSchoolAndDistrictInput: CustomSchoolAndDistrictInput!) {
+  createCustomSchoolAndDistrict(CustomSchoolAndDistrictInput: $customSchoolAndDistrictInput) {
+    _id
+    Inst_UID
+    Institution_Name_Proper
+    Mailing_Addr1_Proper
+    Mailing_Addr2_Proper
+    Mailing_City_Proper
+    Mailing_State_Full
+    Mailing_St
+    Mailing_ZIP_5
+    Mailing_ZIP
+    Phone
+    Main_Parent_UID
+    Parent_UID
+    Parent_Name_Proper
+    Country
+    Phone_Present
+    Grade_LO
+    Grade_Hi
+    School_Type
+    Record_Type
+    Grade_Level
+    Num_Schools
+    Record_Type_Text
+    School_Type_Text
+    Grade_Level_Text
+    NCES_LEAID
+    SCHNO
+    Date_Last_Changed
+    Institution_Long_Name
+    District_Type
+    Fax
+    URL
+    School_Yr_Start
+    School_Yr_End
+    Latitude
+    Longitude
+    Date_Added
+    Parent_Long_Name
+    Area_Code
+    Source
+    Inst_Status
+    Institution_Short_Name
+    District_Type_Text
+    Detailed_Grade_Level_Text
+    Inst_Status_Text
+    Main_Parent_Name_Proper
+  }
+  }
+    ```
+​
+
+- **Headers**:
+​
+  - `Authorization`: Bearer token for authentication.
+  - `Content-Type`: application/graphql
+​
+- **Rate Limits**:
+​
+  - 500 mutations per hour.
+​
+- **Expected Response Format**:
+​
+    ```json
+    {
+  "data": {
+    "createCustomSchoolAndDistrict": {
+      "_id": "123",
+      "Inst_UID": "CUST123",
+      "Institution_Name_Proper": "Custom School",
+      "Mailing_Addr1_Proper": "123 Main Street",
+      "Mailing_Addr2_Proper": "Suite 45",
+      "Mailing_City_Proper": "New City",
+      "Mailing_State_Full": "New York",
+      "Mailing_St": "NY",
+      "Mailing_ZIP_5": "54321",
+      "Mailing_ZIP": "54321-6789",
+      "Phone": "555-123-4567",
+      "Main_Parent_UID": "PARENT123",
+      "Parent_UID": "PARENT456",
+      "Parent_Name_Proper": "Custom School District",
+      "Country": "United States",
+      "Phone_Present": "Yes",
+      "Grade_LO": "K",
+      "Grade_Hi": "12",
+      "School_Type": "Public",
+      "Record_Type": "Public",
+      "Grade_Level": "Elementary",
+      "Num_Schools": "1",
+      "Record_Type_Text": "Public",
+      "School_Type_Text": "Public",
+      "Grade_Level_Text": "Elementary",
+      "NCES_LEAID": "LEA123",
+      "SCHNO": "SCHOOL456",
+      "Date_Last_Changed": "2023-01-02",
+      "Institution_Long_Name": "Custom School District",
+      "District_Type": "Independent",
+      "Fax": "555-789-1234",
+      "URL": "https://www.customschool.org",
+      "School_Yr_Start": "2023-08-15",
+      "School_Yr_End": "2024-05-30",
+      "Latitude": "40.7128",
+      "Longitude": "-74.0060",
+      "Date_Added": "2023-01-01",
+      "Parent_Long_Name": "Custom School District",
+      "Area_Code": "555",
+      "Source": "Custom Data Source",
+      "Inst_Status": "ACTIVE",
+      "Institution_Short_Name": "Custom School",
+      "District_Type_Text": "Independent",
+      "Detailed_Grade_Level_Text": "K-12",
+      "Inst_Status_Text": "Active",
+      "Main_Parent_Name_Proper": "Custom School District"
+    }
+  }
+  }
+
+    ```
+- **Error Handling**:
+     - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
+  - `401 Unauthorized`: Invalid or missing token.
+  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
+  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+​
+​
+
+​
+- **Test Scenarios**
+​
+  - Create a custom school or district with valid authorization.
+  - Create a custom school or district without authorization.
+  - Test with an invalid token.
+  
+​
+- **Test Cases**
+​
+  - **8.1 Create Custom School/District with Valid Authorization**
+​
+    - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
+    - **When**: User sends a mutation to create a custom school or district.
+    - **Then**: Server responds with status 200 OK and returns the created custom school/district information.
+​
+  - **8.2 Create Custom School/District without Authorization**
+​
+    - **Given**: User does not send an `Authorization` header.
+    - **When**: User sends a mutation to create a custom school or district.
+    - **Then**: Server responds with status `401 Unauthorized`.
+​
+  - **8.3 Test with an Invalid Token**
+​
+    - **Given**: User sends an invalid `Authorization `header.
+    - **When**: User sends a mutation to create a custom school or district.
+    - **Then**: Server responds with status `401 Unauthorized`.
+​
+  
+
+
+  #### 9.Update Custom District or School 
+​
+- **GraphQL Mutation**:
+​
+    ```graphql
+  mutation UpdateSchool($updateSchoolInput: UpdateSchoolInput!) {
   updateSchool(updateSchoolInput: $updateSchoolInput) {
     _id
     Inst_UID
@@ -1479,44 +1639,11 @@ query GetUniqueStates($country: String!) {
     Inst_Status_Text
     Main_Parent_Name_Proper
   }
-}
+  }
 
     ```
 ​
-- **Input Type**:
-​
-    ```graphql
-    input AccountInput {
-    id: ID
-    Inst_UID: ID
-    Institution_Name: String
-    status: String
-    NCES_LEAID:String
-    SCHNO: String
-    ... [other fields]
-    }
-    ```
-​
-- **Input Validation**:
-​
-  - **name**:
-    - Type: String
-    - Required: Yes
-    - Validation: Max-length of 150 characters.
-  - **status**:
-    - Type: String
-    - Required: Yes
-    - Validation: Should be one of ["Active", "Inactive", "Pending"].
-  - **email**:
-    - Type: String
-    - Validation: Must be a valid email format.
-  - **phoneNumber**:
-    - Type: String
-    - Validation: Should be a valid phone number format.
-  - **address**:
-    - Type: String
-    - Validation: Max-length of 500 characters.
-​
+
 - **Headers**:
 ​
   - `Authorization`: Bearer token for authentication.
@@ -1533,84 +1660,251 @@ query GetUniqueStates($country: String!) {
   "data": {
     "updateSchool": {
       "_id": "123",
-      "Inst_UID": "YourInstUID",
+      "Inst_UID": "SCHOOL123",
       "Institution_Name_Proper": "Updated School Name",
-      // Updated fields...
+      "Mailing_Addr1_Proper": "456 Main Street",
+      "Mailing_Addr2_Proper": "Suite 789",
+      "Mailing_City_Proper": "New Town",
+      "Mailing_State_Full": "New York",
+      "Mailing_St": "NY",
+      "Mailing_ZIP_5": "54321",
+      "Mailing_ZIP": "54321-9876",
+      "Phone": "555-789-1234",
+      "Main_Parent_UID": "PARENT123",
+      "Parent_UID": "PARENT456",
+      "Parent_Name_Proper": "Updated School District",
+      "Country": "United States",
+      "Phone_Present": "Yes",
+      "Grade_LO": "K",
+      "Grade_Hi": "12",
+      "School_Type": "Public",
+      "Record_Type": "Public",
+      "Grade_Level": "Elementary",
+      "Num_Schools": "1",
+      "Record_Type_Text": "Public",
+      "School_Type_Text": "Public",
+      "Grade_Level_Text": "Elementary",
+      "NCES_LEAID": "LEA456",
+      "SCHNO": "SCHOOL789",
+      "Date_Last_Changed": "2023-01-02",
+      "Institution_Long_Name": "Updated School District",
+      "District_Type": "Independent",
+      "Fax": "555-123-4567",
+      "URL": "https://www.updatedschool.org",
+      "School_Yr_Start": "2023-08-15",
+      "School_Yr_End": "2024-05-30",
+      "Latitude": "40.7128",
+      "Longitude": "-74.0060",
+      "Date_Added": "2023-01-01",
+      "Parent_Long_Name": "Updated School District",
+      "Area_Code": "555",
+      "Source": "Custom Data Source",
+      "Inst_Status": "ACTIVE",
+      "Institution_Short_Name": "Updated School",
+      "District_Type_Text": "Independent",
+      "Detailed_Grade_Level_Text": "K-12",
+      "Inst_Status_Text": "Active",
+      "Main_Parent_Name_Proper": "Updated School District"
     }
   }
-}
+  }
 
     ```
-​
 - **Error Handling**:
-​
-  - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
+     - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
   - `401 Unauthorized`: Invalid or missing token.
   - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
   - GraphQL-specific errors are encapsulated in the `errors` array in the response.
 ​
-- **Deprecation Strategy**:
 ​
-  - If there's any plan to deprecate fields or introduce breaking changes, these will be communicated in the API's changelog at least 3 months in advance.
-  - Deprecated fields will be marked in the schema documentation and will still be available for 6 months post the deprecation announcement.
-​
-- **Sample Requests and Responses**:
-​
-  - **Request**:
-​
-    ```graphql
-    mutation {
-      UpdateSchool($updateSchoolInput: {Phone: "123456789", status: "Active", email: "account@example.com"}) {
-        id
-        name
-        status
-      }
-    }
-    ```
-​
-  - **Response**:
-​
-    ```json
-    {
-        "data": {
-            "UpdateSchool": {
-                "id": "12345",
-                "Phone": "123456789",
-                "status": "Active"
-            }
-        }
-    }
-    ```
+
 ​
 - **Test Scenarios**
 ​
-  - Update a School with valid data and authorization.
-  - Attempt mutation without providing required fields.
-  - Attempt mutation without authorization.
+  - Update school information with valid authorization.
+  - Update school information without authorization.
   - Test with an invalid token.
+  
 ​
 - **Test Cases**
 ​
-  - **8.1 Update a School with valid data and authorization**
+  - **9.1 Update School Information with Valid Authorization**
 ​
     - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
-    - **When**: User sends a mutation request to update a school's information.
-    - **Then**: Server responds with status `200 OK` and returns the updated school information.
+    - **When**: User sends a mutation to update school information.
+    - **Then**: Server responds with status 200 OK and returns the updated  custom school/district information.
 ​
-  - **8.2 Attempt mutation without providing required fields**
+  - **9.2 Update School Information without Authorization**
 ​
-    - **Given**: User is authorized but sends incomplete account data.
-    - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `400 Bad Request`.
-​
-  - **8.3 Attempt mutation without authorization**
-​
-    - **Given**: User does not send an `Authorization` header but provides valid account data.
-    - **When**: User sends a mutation request.
+    - **Given**: User does not send an `Authorization` header.
+    - **When**: User sends a mutation to update  a custom school or district.
     - **Then**: Server responds with status `401 Unauthorized`.
 ​
-  - **8.4 Test with an Invalid Token**
+  - **9.3 Test with an Invalid Token**
 ​
-    - **Given**: User sends an invalid `Authorization` header.
-    - **When**: User sends a mutation to update a school's information.
+    - **Given**: User sends an invalid `Authorization `header.
+    - **When**: User sends a mutation to update a custom school or district.
+    - **Then**: Server responds with status `401 Unauthorized`.
+  
+
+
+  #### 10.Update Custom District or School 
+​
+- **GraphQL Mutation**:
+​
+    ```graphql
+  mutation RemoveSchool($removeSchoolId: String!) {
+  removeSchool(id: $removeSchoolId) {
+    _id
+    Inst_UID
+    Institution_Name_Proper
+    Mailing_Addr1_Proper
+    Mailing_Addr2_Proper
+    Mailing_City_Proper
+    Mailing_State_Full
+    Mailing_St
+    Mailing_ZIP_5
+    Mailing_ZIP
+    Phone
+    Main_Parent_UID
+    Parent_UID
+    Parent_Name_Proper
+    Country
+    Phone_Present
+    Grade_LO
+    Grade_Hi
+    School_Type
+    Record_Type
+    Grade_Level
+    Num_Schools
+    Record_Type_Text
+    School_Type_Text
+    Grade_Level_Text
+    NCES_LEAID
+    SCHNO
+    Date_Last_Changed
+    Institution_Long_Name
+    District_Type
+    Fax
+    URL
+    School_Yr_Start
+    School_Yr_End
+    Latitude
+    Longitude
+    Date_Added
+    Parent_Long_Name
+    Area_Code
+    Source
+    Inst_Status
+    Institution_Short_Name
+    District_Type_Text
+    Detailed_Grade_Level_Text
+    Inst_Status_Text
+    Main_Parent_Name_Proper
+  }
+  }
+
+    ```
+​
+
+- **Headers**:
+​
+  - `Authorization`: Bearer token for authentication.
+  - `Content-Type`: application/graphql
+​
+- **Rate Limits**:
+​
+  - 500 mutations per hour.
+​
+- **Expected Response Format**:
+​
+    ```json
+   {
+  "data": {
+    "removeSchool": {
+      "_id": "123",
+      "Inst_UID": "SCHOOL123",
+      "Institution_Name_Proper": "Removed School",
+      "Mailing_Addr1_Proper": "789 Elm Street",
+      "Mailing_Addr2_Proper": "Suite 123",
+      "Mailing_City_Proper": "Old Town",
+      "Mailing_State_Full": "New York",
+      "Mailing_St": "NY",
+      "Mailing_ZIP_5": "54321",
+      "Mailing_ZIP": "54321-1234",
+      "Phone": "555-123-4567",
+      "Main_Parent_UID": "PARENT123",
+      "Parent_UID": "PARENT456",
+      "Parent_Name_Proper": "Removed School District",
+      "Country": "United States",
+      "Phone_Present": "Yes",
+      "Grade_LO": "K",
+      "Grade_Hi": "12",
+      "School_Type": "Public",
+      "Record_Type": "Public",
+      "Grade_Level": "Elementary",
+      "Num_Schools": "1",
+      "Record_Type_Text": "Public",
+      "School_Type_Text": "Public",
+      "Grade_Level_Text": "Elementary",
+      "NCES_LEAID": "LEA789",
+      "SCHNO": "SCHOOL123",
+      "Date_Last_Changed": "2023-01-02",
+      "Institution_Long_Name": "Removed School District",
+      "District_Type": "Independent",
+      "Fax": "555-789-1234",
+      "URL": "https://www.removedschool.org",
+      "School_Yr_Start": "2023-08-15",
+      "School_Yr_End": "2024-05-30",
+      "Latitude": "40.7128",
+      "Longitude": "-74.0060",
+      "Date_Added": "2023-01-01",
+      "Parent_Long_Name": "Removed School District",
+      "Area_Code": "555",
+      "Source": "Custom Data Source",
+      "Inst_Status": "REMOVED",
+      "Institution_Short_Name": "Removed School",
+      "District_Type_Text": "Independent",
+      "Detailed_Grade_Level_Text": "K-12",
+      "Inst_Status_Text": "Removed",
+      "Main_Parent_Name_Proper": "Removed School District"
+    }
+  }
+  }
+
+    ```
+- **Error Handling**:
+     - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
+  - `401 Unauthorized`: Invalid or missing token.
+  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
+  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+​
+​
+
+​
+- **Test Scenarios**
+​
+  - Remove a school with valid authorization.
+  - Remove a school without authorization.
+  - Test with an invalid token.
+  
+​
+- **Test Cases**
+​
+  - **10.1 Remove School with Valid Authorization**
+​
+    - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
+    - **When**: User sends a mutation to remove school information.
+    - **Then**: Server responds with status 200 OK and returns the removed custom school/district information.
+​
+  - **8.2 Remove School without Authorization**
+​
+    - **Given**: User does not send an `Authorization` header.
+    - **When**: User sends a mutation to remove  a remove school or district.
+    - **Then**: Server responds with status `401 Unauthorized`.
+​
+  - **8.3 Test with an Invalid Token**
+​
+    - **Given**: User sends an invalid `Authorization `header.
+    - **When**: User sends a mutation to remove  a custom school or district.
     - **Then**: Server responds with status `401 Unauthorized`.
