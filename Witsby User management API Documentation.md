@@ -111,6 +111,42 @@ This API provides a mutation to create a new institution.When new deal is `close
     - Type: String
     - Required: Yes
     - Validation: Max-length of 150 characters.
+  - **subscriberType**:
+    - Type: String
+    - Required: Yes
+    - Validation: Should be one of ["DISTRICT", "SCHOOL"].
+  - **ascdId (Witsby contract id)**:
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **subscriptionInfo**
+    - Type: JSON
+    - Required: Yes
+    - Validation: Should content `startDate` and `expiryDate`.
+    - **Example Value**:
+     ​
+      ```json
+      {
+        "startDate": "2023-12-10T00:00:00.000+05:30",
+        "expiryDate": "2024-12-08T00:00:00.000+05:30"
+      }
+      ```
+  - **city**
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **state**
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **postalCode**
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **country**
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
   - **status**:
     - Type: String
     - Required: Yes
@@ -121,7 +157,14 @@ This API provides a mutation to create a new institution.When new deal is `close
   - **phoneNumber**:
     - Type: String
     - Validation: Should be a valid phone number format.
-  - **address**: - Type: String - Validation: Max-length of 500 characters.
+  - **salesforceAccountID**
+    - Type: String
+    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **totalSeatLicensesPurchased**
+    - Type: Int
+    - Required: Yes
+    - Validation: Must be a valid number.
     ​
 - **Headers**:
   ​
@@ -242,21 +285,57 @@ This API provides a mutation to update an existing institution's information. Wh
   ​
 - **Input Validation**:
   ​
+  - **id**:
+    - Type: ID
+    - Required: Yes
+    - Validation: Must be a valid institution ID.
   - **name**:
     - Type: String
-    - Required: Yes
+    - Validation: Max-length of 150 characters.
+  - **subscriberType**:
+    - Type: String
+    - Validation: Should be one of ["DISTRICT", "SCHOOL"].
+  - **ascdId (Witsby contract id)**:
+    - Type: String
+    - Validation: Max-length of 150 characters.
+  - **subscriptionInfo**
+    - Type: JSON
+    - Validation: Should content `startDate` and `expiryDate`.
+    - **Example Value**:
+     ​
+      ```json
+      {
+        "startDate": "2023-12-10T00:00:00.000+05:30",
+        "expiryDate": "2024-12-08T00:00:00.000+05:30"
+      }
+      ```
+  - **city**
+    - Type: String
+    - Validation: Max-length of 150 characters.
+  - **state**
+    - Type: String
+    - Validation: Max-length of 150 characters.
+  - **postalCode**
+    - Type: String
+    - Validation: Max-length of 150 characters.
+  - **country**
+    - Type: String
     - Validation: Max-length of 150 characters.
   - **status**:
     - Type: String
-    - Required: Yes
-    - Validation: Should be one of ["Active", "Inactive", "Trail"].
+    - Validation: Should be one of ["ACTIVE", "INACTIVE", "TRIAL", "PENDING_SETUP"].
   - **email**:
     - Type: String
     - Validation: Must be a valid email format.
   - **phoneNumber**:
     - Type: String
     - Validation: Should be a valid phone number format.
-  - **address**: - Type: String - Validation: Max-length of 500 characters.
+  - **salesforceAccountID**
+    - Type: String
+    - Validation: Max-length of 150 characters.
+  - **totalSeatLicensesPurchased**
+    - Type: Int
+    - Validation: Must be a valid number.
     ​
 - **Headers**:
   ​
@@ -386,6 +465,17 @@ If a new institute is added, the status will be shown as `Pending Setup`.This wi
       }
     }
   ```
+
+  - **Input Validation**:
+  ​
+    - **id**:
+      - Type: ID
+      - Required: Yes
+      - Validation: Must be a valid institution ID.
+    - **ascdId (Witsby contract id)**:
+      - Type: String
+      - Required: Yes
+      - Validation: Max-length of 150 characters.
   ​
 - **Headers**:
   - `Authorization`: Bearer token for authentication.
@@ -601,7 +691,52 @@ This API provides a mutation to create/update/remove the organization levels foT
 
   ```
 
+  - **Input Type**:
   ​
+  ```graphql
+    input UpdateInstitutionInput {
+      id: ID!
+      structure: [CreateInstitutionStructure!]
+    }
+  ```
+
+  - **Input Validation**:
+  ​
+  - **id**:
+    - Type: ID
+    - Required: Yes
+    - Validation: Must be a valid institution ID.
+  - **structure**
+    - Type: JSON
+    - Validation: Should content valid structure JSON Object
+    - **Example Value**:
+     ​
+      ```json
+      [
+            {
+            "id": "456",
+            "organizationId": "org123",
+            "title": "District",
+            "description": "Updated Structure Description",
+            "level": "1",
+            "type": "Department",
+            "parentId": "0",
+            "createdAt": "2023-01-01T12:00:00Z",
+            "updatedAt": "2023-01-02T14:30:00Z"
+          },
+          {
+            "id": "457",
+            "organizationId": "org124",
+            "title": "School",
+            "description": "Updated Structure Description",
+            "level": "2",
+            "type": "Department",
+            "parentId": "1",
+            "createdAt": "2023-01-01T12:00:00Z",
+            "updatedAt": "2023-01-02T14:30:00Z"
+          },
+        ]
+      ```
 
 ​
 
@@ -724,6 +859,54 @@ This API provides a mutation to create or update the organization hierarchy of a
       }
     }
   ```
+
+  - **Input Type**:
+  ​
+  ```graphql
+    input UpdateInstitutionInput {
+      id: ID!
+      hierarchies: [CreateInstitutionHierarchies!]
+    }
+  ```
+
+  - **Input Validation**:
+  ​
+  - **id**:
+    - Type: ID
+    - Required: Yes
+    - Validation: Must be a valid institution ID.
+  - **hierarchies**
+    - Type: JSON
+    - Validation: Should content valid hierarchies JSON Object
+    - **Example Value**:
+     ​
+      ```json
+      [
+        {
+          "id": "101",
+          "internalId": "hier123",
+          "title": "District Name",
+          "structureId": "456",
+          "sortingOrder": 1,
+          "parentId": "102",
+          "author": {
+            "id": "author456",
+            "name": "John Doe",
+            "avatarUrl": "path/to/avatar",
+            "organization": {
+              "id": "org456",
+              "name": "Example Org"
+            }
+          },
+          "lastUpdatedInfo": {
+            "updatedAt": "2023-01-03T10:15:00Z"
+          },
+          "createdAt": "2023-01-03T10:00:00Z"
+        }
+      ]
+      ```
+
+
 - **Headers**:
   - `Authorization`: Bearer token for authentication.
   - `userinfo`: Encrypted user object
@@ -796,7 +979,7 @@ This API provides a mutation to create or update the organization hierarchy of a
   - 3.3 **Create or Update a hierarchies without authorization**
     ​ - **Given**: User does not send an `Authorization` header but provides valid hierarchies data. - **When**: User sends a `POST` request to hierarchies a level. - **Then**: Server responds with status `200 with an error message`.
 
-#### \*\*4. Fetch Districts or School
+#### 4. Fetch Districts or School
 
 While setting up the organization hierarchy this API provides a query to retrieve a list of custom District or School based on specified filters and record types. It returns comprehensive details about each custom District or School, including location, contact information, and attributes.
 
@@ -875,6 +1058,28 @@ While setting up the organization hierarchy this API provides a query to retriev
       searchText: String
     }
   ```
+
+  - **Input Validation**:
+  ​
+  - **RecordType**:
+    - Type: String
+    - Required: Yes
+    - Validation: Should be one of ["Building", "District"].
+  - **Filter**
+    - Type: JSON
+    - Validation: Should content valid filter JSON Object
+    - **Example Value**:
+     ​
+      ```json
+      {
+        "limit": 10,
+        "page": 0,
+        "searchField": "",
+        "searchText": "",
+        "sortDirection": "",
+        "sortField": ""
+      }
+      ```
 
 - **Headers**:
 
@@ -1128,29 +1333,33 @@ This mutation allows you to update the information of a District or school, incl
       id: ID!
       Inst_UID: ID
       Institution_Name: String
-      status: String
+      Inst_Status_Text: String
       NCES_LEAID:String
       SCHNO: String
     }
   ```
   ​
 - **Input Validation**:
-  ​
-  - **name**:
-    - Type: String
+
+  - **id**:
+    - Type: ID
     - Required: Yes
+    - Validation: Must be a valid District or School ID.
+  - **Inst_UID**:
+    - Type: String
     - Validation: Max-length of 150 characters.
-  - **status**:
+  - **Institution_Name**:
     - Type: String
-    - Required: Yes
-    - Validation: Should be one of ["Active", "Inactive", "Pending"].
-  - **email**:
+    - Validation: Max-length of 150 characters.
+  - **NCES_LEAID**:
     - Type: String
-    - Validation: Must be a valid email format.
-  - **phoneNumber**:
+    - Validation: Max-length of 150 characters.
+  - **SCHNO**:
     - Type: String
-    - Validation: Should be a valid phone number format.
-  - **address**: - Type: String - Validation: Max-length of 500 characters.
+    - Validation: Max-length of 150 characters.
+  - **Inst_Status_Text**:
+    - Type: String
+    - Validation: Should be one of ["Active", "Inactive"].
     ​
 - **Headers**:
   ​
@@ -1164,18 +1373,17 @@ This mutation allows you to update the information of a District or school, incl
     ​
 - **Expected Response Format**:
   ​
-  `json
+  ```json
     {
       "data": {
         "updateSchool": {
           "_id": "123",
           "Inst_UID": "YourInstUID",
           "Institution_Name_Proper": "Updated School Name",
-          // Other fields...
         }
       }
     }
-    `
+    ```
   ​
 - **Error Handling**:
   ​
