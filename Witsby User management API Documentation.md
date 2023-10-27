@@ -36,7 +36,7 @@ Please find below the detailed documentation for each query and mutation, along 
      }
      ```
 ​
-### Fetching Data from AgileED
+### Fetch Data from AgileED
 ​
 1. **Fetch AgileED Data**
    - **Endpoint**: `/sfapi/v1/agileed/data`
@@ -51,7 +51,7 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
 #### 1. Create Institution Account
 
-This API provides a mutation to create a new institution.When new deal is `closed won` Sales Force will call this Witsby API. It allows to specify various details, including the institution's name, location, subscription information, status, total seat licenses purchased, etc. 
+This API provides a mutation to create a new institution.When new deal is `closed won` Sales Force will call this Witsby API. It allows to specify various details, including the institution's name, location, subscription information, status, total seat licenses purchased, etc.
 
 - **GraphQL Mutation**:
 ​
@@ -198,7 +198,7 @@ This API provides a mutation to create a new institution.When new deal is `close
 
 #### 2. Update Institution Account (For renewal)
 ​
-This API provides a mutation to update an existing institution's information. When deal is `renewed` Sales Force will call this Witsby API. It allows you to modify various details, including the institution's name, location, subscription information, and status. 
+This API provides a mutation to update an existing institution's information. When deal is `renewed` Sales Force will call this Witsby API. It allows you to modify various details, including the institution's name, location, subscription information, and status.
 
 - **GraphQL Mutation**:
 ​
@@ -345,7 +345,7 @@ This API provides a mutation to update an existing institution's information. Wh
 
 ### Organization Hierarchy - CRUD Levels (structures) and Hierarchies
 
-#### **1. Fetch Institution Account with Levels (structures) and Hierarchies (READ)**
+#### **1. Fetch Institution with Levels (structures) and Hierarchies**
 ​
  API provides a query to retrieve detailed information about an institution based on its ID. The query returns various details, including the institution's basic information, subscription data, location, status, and additional hierarchical and structural data.
  If a new institute is added, the status will be shown as `Pending Setup`.This will prompt the CST team to create the organization level and hierarchy.
@@ -565,9 +565,9 @@ This API provides a mutation to update an existing institution's information. Wh
 
 
 ​
-#### **2. Create/Update/Remove Level (structure)**
+#### **2. Create/Update/Remove Level (structures)**
 ​
-This API provides a mutation to create/update/remove the organisation levels foThis API provides mutations for creating, updating, or removing organization `Levels` for institutions.
+This API provides a mutation to create/update/remove the organization levels foThis API provides mutations for creating, updating, or removing organization `Levels` for institutions.
 
 - **GraphQL Mutation**:
 ​
@@ -690,9 +690,9 @@ This API provides a mutation to create/update/remove the organisation levels foT
 ​
 ---
 ​
-#### **3. Create or Update Organization Hierarchies**
+#### **3. Create/Update/Remove Hierarchies**
 ​
-This API provides a mutation to create or update the organisation hierarchy of an institution. This includes its basic details, organizational structure, and hierarchical information.
+This API provides a mutation to create or update the organization hierarchy of an institution. This includes its basic details, organizational structure, and hierarchical information.
 
 - **GraphQL Mutation**:
 ​
@@ -818,9 +818,9 @@ This API provides a mutation to create or update the organisation hierarchy of a
     - **Then**: Server responds with status `200 with an error message`.
 
 
-#### **4. Fetch Districts or School (READ)
+#### **4. Fetch Districts or School
 
-While setting up the organisation hierachy this API provides a query to retrieve a list of custom District or School based on specified filters and record types. It returns comprehensive details about each custom District or School, including location, contact information, and attributes.
+While setting up the organization hierarchy this API provides a query to retrieve a list of custom District or School based on specified filters and record types. It returns comprehensive details about each custom District or School, including location, contact information, and attributes.
 
 - **GraphQL Query**:
 
@@ -961,9 +961,9 @@ While setting up the organisation hierachy this API provides a query to retrieve
 
 
 
-  #### **5. Fetching Country Listing (READ)
+#### **5. Fetch Country Listing**
 
-This query allows you to retrieve a list of unique countries available in the system while setting up organisation hierarchy. It provides a simple and efficient way to obtain a list of countries for reference or selection in other parts of the application. 
+This query allows you to retrieve a list of unique countries available in the system while setting up organization hierarchy. It provides a simple and efficient way to obtain a list of countries for reference or selection in other parts of the application.
 
 - **GraphQL Query**:
 
@@ -1027,9 +1027,9 @@ This query allows you to retrieve a list of unique countries available in the sy
     - **Then**: Server responds with status `200 with an error message`.
 
 
-#### **6. Fetching State Listing (READ)
+#### **6. Fetch State Listing
 
-This query allows you to retrieve a list of unique states or regions within a specific country. You can specify the country as a parameter to obtain a list of states associated with that country. It provides a convenient way to fetch state or regional data for further use in your application. 
+This query allows you to retrieve a list of unique states or regions within a specific country. You can specify the country as a parameter to obtain a list of states associated with that country. It provides a convenient way to fetch state or regional data for further use in your application.
 
 - **GraphQL Query**:
 
@@ -1089,7 +1089,7 @@ This query allows you to retrieve a list of unique states or regions within a sp
 
 #### 7. Update Custom District or School
 ​
-This mutation allows you to update the information of a District or school, including various attributes such as location, contact details, and educational parameters. The mutation takes an input with specific fields for updating District or school information. It provides a convenient way to make modifications to school records in the system. 
+This mutation allows you to update the information of a District or school, including various attributes such as location, contact details, and educational parameters. The mutation takes an input with specific fields for updating District or school information. It provides a convenient way to make modifications to school records in the system.
 
 - **GraphQL Mutation**:
 ​
@@ -1247,11 +1247,11 @@ This mutation allows you to update the information of a District or school, incl
     - **Then**: Server responds with status `200 with an error message`.
 
 
-#### 8.Create Custom District or School
+#### 8. Create Custom District or School
 ​
 - **GraphQL Mutation**:
 ​
-This mutation allows to create a custom school or district by providing various details such as location, contact information, and educational parameters. The mutation takes an input with specific fields to create a new school or district record in the system. It provides a convenient way to add custom educational entities to the system. 
+This mutation allows to create a custom school or district by providing various details such as location, contact information, and educational parameters. The mutation takes an input with specific fields to create a new school or district record in the system. It provides a convenient way to add custom educational entities to the system.
 
     ```graphql
     mutation Mutation($customSchoolAndDistrictInput: CustomSchoolAndDistrictInput!) {
@@ -1422,7 +1422,7 @@ This mutation allows to create a custom school or district by providing various 
 ​
 - **GraphQL Mutation**:
 ​
-This mutation allows to remove a school record from the system based on its unique identifier. Upon successful execution, the specified school's information will be deleted from the database. 
+This mutation allows to remove a school record from the system based on its unique identifier. Upon successful execution, the specified school's information will be deleted from the database.
 
     ```graphql
     mutation RemoveSchool($removeSchoolId: String!) {
@@ -1552,7 +1552,7 @@ This mutation allows to remove a school record from the system based on its uniq
   - Remove a school with valid authorization.
   - Remove a school without authorization.
   - Test with an invalid token.
-  
+
 - **Test Cases**
 ​
   - **9.1 Remove School with Valid Authorization**
@@ -1580,7 +1580,7 @@ This mutation allows to remove a school record from the system based on its uniq
 - To check for errors, inspect the `errors` field in the response JSON. If it is present, the request encountered one or more issues, and the `errors` field will contain details about each error.
 - The `errors` field may include error messages, error codes, and additional information to help diagnose and resolve the problem.
 - When an error occurs, you can typically find a description of the issue in the `message` field within each error object.
-- Below is a general structure for describing error handling in your API documentation. 
+- Below is a general structure for describing error handling in your API documentation.
 ​
   - **GRAPHQL_PARSE_FAILED**: This error occurs when the GraphQL operation string contains a `syntax error`, making it impossible to parse the request.
   - **GRAPHQL_VALIDATION_FAILED**: This error indicates that the GraphQL operation is not valid against the `server's schema`server's schema. The request violates the schema's validation rules.
