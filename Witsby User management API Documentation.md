@@ -17,12 +17,12 @@ Please find below the detailed documentation for each query and mutation, along 
    - **Method**: `POST`
    - **Payload**:
      ​
-     `json
+     ```json
      {
        "subscriptionId": "string",
        "accountName": "string"
      }
-     `
+     ```
      ​
    - **Response**: Standard API responses for success or error.
 2. **Create Term Record & Update Term Date**
@@ -31,12 +31,12 @@ Please find below the detailed documentation for each query and mutation, along 
    - **Method**: `POST`
    - **Payload**:
      ​
-     `json
+     ```json
      {
        "subscriptionId": "string",
        "termDate": "date"
      }
-     `
+     ```
      ​
 
 ### Fetch Data from AgileED
