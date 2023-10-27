@@ -48,6 +48,7 @@ Please find below the detailed documentation for each query and mutation, along 
 #### **Endpoint**: `https://api.witsby.ascd.org/graphql`
 ​
 ### Account Creation using Witsby
+
 ​
 #### 1. Create Institution Account
 ​
@@ -149,14 +150,11 @@ Please find below the detailed documentation for each query and mutation, along 
           }
         }
       }
-    ```
+   ```
 ​
 - **Error Handling**:
 ​
-  - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
-  - `401 Unauthorized`: Invalid or missing token.
-  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate institution).
-  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Deprecation Strategy**:
 ​
@@ -182,19 +180,19 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized but sends incomplete institution data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `400 Bad Request`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **1.3 Attempt mutation without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid institution data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **1.4 Attempt mutation with an existing institution name**
 ​
     - **Given**: User is authorized and sends data of an institution name that already exists in the system.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `409 Conflict`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
 
 #### 2. Update Institution Account (For renewal)
@@ -301,11 +299,7 @@ Please find below the detailed documentation for each query and mutation, along 
     ```
 ​
 - **Error Handling**:
-​
-  - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
-  - `401 Unauthorized`: Invalid or missing token.
-  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
-  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Deprecation Strategy**:
 ​
@@ -331,19 +325,19 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized but sends incomplete account data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `400 Bad Request`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **2.3 Attempt mutation without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid account data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **2.4 Attempt mutation with an existing account name**
 ​
     - **Given**: User is authorized and sends data of an account name that already exists in the system.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `409 Conflict`.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 ### Organization Hierarchy - CRUD Levels (structures) and Hierarchies
@@ -542,9 +536,7 @@ Please find below the detailed documentation for each query and mutation, along 
   ```
 ​
 - **Error Handling**:
-  - `400 Bad Request`: If the GraphQL query is malformed.
-  - `401 Unauthorized`: Invalid or missing token.
-  - GraphQL errors are encapsulated in the `errors` array in the response.
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Test Scenarios**
   - Retrieve Levels (structures) and Hierarchy information for the institution with valid authorization.
@@ -662,9 +654,7 @@ Please find below the detailed documentation for each query and mutation, along 
   ```
 ​
 - **Error Handling**:
-  - `400 Bad Request`: For validation errors, malformed GraphQL.
-  - `401 Unauthorized`: Invalid or missing token.
-  - GraphQL errors (like validation issues) are encapsulated in the `errors` array in the response.
+  In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Test Scenarios**
   - Create or Update a new level with valid data and authorization.
@@ -682,13 +672,13 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized but sends incomplete level data.
     - **When**: User sends a `POST` request to create a level.
-    - **Then**: Server responds with status `400 Bad Request`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - 2.3 **Create or Update a level without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid level data.
     - **When**: User sends a `POST` request to create a level.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
 ---
 ​
@@ -791,10 +781,8 @@ Please find below the detailed documentation for each query and mutation, along 
   ```
 ​
 - **Error Handling**:
-  - `400 Bad Request`: For validation errors, malformed GraphQL.
-  - `401 Unauthorized`: Invalid or missing token.
-  - GraphQL errors (like validation issues) are encapsulated in the `errors` array in the response.
-​
+ In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
+
 - **Test Scenarios**
   - Create or Update a new hierarchies with valid data and authorization.
   - Create or Update a hierarchies without providing required fields.
@@ -811,13 +799,13 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized but sends incomplete hierarchies data.
     - **When**: User sends a `POST` request to create a hierarchies.
-    - **Then**: Server responds with status `400 Bad Request`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - 3.3 **Create or Update a hierarchies without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid hierarchies data.
     - **When**: User sends a `POST` request to hierarchies a level.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 #### **4. Fetch Districts (READ)
@@ -932,9 +920,7 @@ Please find below the detailed documentation for each query and mutation, along 
 
 
 - **Error Handling**:
- - `400 Bad Request`: If the GraphQL query is malformed.
- - `401 Unauthorized`: Invalid or missing token.
- - GraphQL errors are encapsulated in the `errors` array in the response.
+ - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 
 
 - **Test Scenarios**
@@ -947,18 +933,18 @@ Please find below the detailed documentation for each query and mutation, along 
 - 4.1 **Fetch Districts with valid authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
     - **When**: User sends a GET request to fetch Districts.
-    - **Then**: Server responds with status 200 OK and returns a list of Districts.
+    - **Then**: Server responds with status `200 OK` and returns a list of Districts.
 
 - 4.2 **Fetch Districts without authorization**
 
     - **Given**: User does not send an Authorization header.
     - **When**: User sends a GET request to fetch Districts.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 - 4.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
     - **When**: User sends a GET request to fetch Districts.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 - 4.4 **Perform searches with different filter criteria**
     - Perform tests with various combinations of filter criteria to ensure accurate search results.
@@ -1075,9 +1061,7 @@ Please find below the detailed documentation for each query and mutation, along 
 
 
 - **Error Handling**:
- - `400 Bad Request`: If the GraphQL query is malformed.
- - `401 Unauthorized`: Invalid or missing token.
- - GraphQL errors are encapsulated in the `errors` array in the response.
+ - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 
 
 - **Test Scenarios**
@@ -1090,18 +1074,18 @@ Please find below the detailed documentation for each query and mutation, along 
 - 5.1 **Fetch Schools with valid authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
     - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status 200 OK and returns a list of Schools.
+    - **Then**: Server responds with status `200 OK` and returns a list of Schools.
 
 - 5.2 **Fetch Schools without authorization**
 
     - **Given**: User does not send an Authorization header.
     - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 - 5.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
     - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 - 5.4 **Perform searches with different filter criteria**
     - Perform tests with various combinations of filter criteria to ensure accurate search results.
@@ -1146,9 +1130,7 @@ Please find below the detailed documentation for each query and mutation, along 
 
 
 - **Error Handling**:
- - `400 Bad Request`: If the GraphQL query is malformed.
- - `401 Unauthorized`: Invalid or missing token.
- - GraphQL errors are encapsulated in the `errors` array in the response.
+ - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 
 
 - **Test Scenarios**
@@ -1161,18 +1143,18 @@ Please find below the detailed documentation for each query and mutation, along 
 - 6.1 **Fetch Unique Countries with Valid Authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
-    - **Then**: Server responds with status 200 OK and returns a list of unique countries.
+    - **Then**: Server responds with status `200 OK` and returns a list of unique countries.
 
 - 6.2 **Fetch Unique Countries without Authorization**
 
     - **Given**: User does not send an Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
-    - **Then**: Server responds with status 200 OK and returns a list of unique countries
+    - **Then**: Server responds with status `200 OK` and returns a list of unique countries
 
 - 6.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 #### **6. Fetching State Listing (READ)
@@ -1209,9 +1191,7 @@ Please find below the detailed documentation for each query and mutation, along 
 
 
 - **Error Handling**:
- - `400 Bad Request`: If the GraphQL query is malformed.
- - `401 Unauthorized`: Invalid or missing token.
- - GraphQL errors are encapsulated in the `errors` array in the response.
+ - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 
 - **Test Scenarios**
   - Fetch unique states for a country with valid authorization.
@@ -1223,18 +1203,18 @@ Please find below the detailed documentation for each query and mutation, along 
 - 6.1 **Fetch Unique States for a Country with Valid Authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
     - **When**: User sends a GET request to fetch unique states for a specific country.
-    - **Then**: Server responds with status 200 OK and returns a list of unique states.
+    - **Then**: Server responds with status `200 OK` and returns a list of unique states.
 
 - 6.2 **Fetch Unique States for a Country without Authorization**
 
     - **Given**: User does not send an Authorization header.
     - **When**: User sends a GET request to fetch unique states for a specific country.
-    - **Then**: Server responds with status 200 OK and returns a list of unique states.
+    - **Then**: Server responds with status `200 OK` and returns a list of unique states.
 
 - 6.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
     - **When**: User sends a GET request to fetch unique states for a specific country.
-    - **Then**: Server responds with status 401 Unauthorized.
+    - **Then**: Server responds with status `200 with an error message`.
 
 #### 7. Update Custom District
 ​
@@ -1354,10 +1334,7 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
 - **Error Handling**:
 ​
-  - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
-  - `401 Unauthorized`: Invalid or missing token.
-  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
-  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Deprecation Strategy**:
 ​
@@ -1383,19 +1360,19 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized but sends incomplete account data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `400 Bad Request`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **7.3 Attempt mutation without authorization**
 ​
     - **Given**: User does not send an `Authorization` header but provides valid account data.
     - **When**: User sends a mutation request.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **7.4 Test with an Invalid Token**
 ​
     - **Given**: User sends an invalid `Authorization` header.
     - **When**: User sends a mutation to update a district's information.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 #### 8.Create Custom District or School
@@ -1537,10 +1514,7 @@ Please find below the detailed documentation for each query and mutation, along 
     ```
 
 - **Error Handling**:
-  - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
-  - `401 Unauthorized`: Invalid or missing token.
-  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
-  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 ​
 - **Test Scenarios**
@@ -1556,19 +1530,19 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
     - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
     - **When**: User sends a mutation to create a custom school or district.
-    - **Then**: Server responds with status 200 OK and returns the created custom school/district information.
+    - **Then**: Server responds with status `200 OK` and returns the created custom school/district information.
 ​
   - **8.2 Create Custom School/District without Authorization**
 ​
     - **Given**: User does not send an `Authorization` header.
     - **When**: User sends a mutation to create a custom school or district.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **8.3 Test with an Invalid Token**
 ​
     - **Given**: User sends an invalid `Authorization `header.
     - **When**: User sends a mutation to create a custom school or district.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 #### 10. Remove Custom District or School
@@ -1696,37 +1670,48 @@ Please find below the detailed documentation for each query and mutation, along 
     ```
 
 - **Error Handling**:
-     - `400 Bad Request`: For validation errors, malformed GraphQL, or if required fields are missing.
-  - `401 Unauthorized`: Invalid or missing token.
-  - `409 Conflict`: If there's a conflict with existing data (e.g., duplicate account).
-  - GraphQL-specific errors are encapsulated in the `errors` array in the response.
-​
-​
-
+  - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
 ​
 - **Test Scenarios**
 ​
   - Remove a school with valid authorization.
   - Remove a school without authorization.
   - Test with an invalid token.
-
-​
+  
 - **Test Cases**
 ​
   - **10.1 Remove School with Valid Authorization**
 ​
     - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
     - **When**: User sends a mutation to remove school information.
-    - **Then**: Server responds with status 200 OK and returns the removed custom school/district information.
+    - **Then**: Server responds with status `200 OK` and returns the removed custom school/district information.
 ​
   - **8.2 Remove School without Authorization**
 ​
     - **Given**: User does not send an `Authorization` header.
     - **When**: User sends a mutation to remove  a remove school or district.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 ​
   - **8.3 Test with an Invalid Token**
 ​
     - **Given**: User sends an invalid `Authorization `header.
     - **When**: User sends a mutation to remove  a custom school or district.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
+
+
+####  Common Error Handling
+
+- In GraphQL, the HTTP status code 200 OK is used for all responses, irrespective of whether they are successful or contain errors.
+- To check for errors, inspect the `errors` field in the response JSON. If it is present, the request encountered one or more issues, and the `errors` field will contain details about each error.
+- The `errors` field may include error messages, error codes, and additional information to help diagnose and resolve the problem.
+- When an error occurs, you can typically find a description of the issue in the `message` field within each error object.
+- Below is a general structure for describing error handling in your API documentation. 
+​
+  - **GRAPHQL_PARSE_FAILED**: This error occurs when the GraphQL operation string contains a `syntax error`, making it impossible to parse the request.
+  - **GRAPHQL_VALIDATION_FAILED**: This error indicates that the GraphQL operation is not valid against the `server's schema`server's schema. The request violates the schema's validation rules.
+  - **BAD_USER_INPUT**: When the GraphQL operation includes an invalid value for a `field argument or input`, this error is used to signal that the user's input is incorrect or not allowed.
+  - **PERSISTED_QUERY_NOT_FOUND**: This error is used in the context of automatic persisted queries (APQ). It occurs when a client sends the `hash` of a query string to execute via APQ, but the query was not found in the APQ cache.
+  - **PERSISTED_QUERY_NOT_SUPPORTED**: This error occurs when a client sends the hash of a query string to execute via APQ, but the server has disabled automatic persisted queries.
+  - **OPERATION_RESOLUTION_FAILURE**: This error is raised when the request is parsed successfully and is valid against the server's schema. Still, the server couldn't determine which named operation to run. This usually happens when a request contains multiple named operations and doesn't specify which operation to execute.
+  - **BAD_REQUEST**: An error occurred before the server could attempt to `parse` the given GraphQL operation. This is a general error that indicates an issue with the request format or data.
+  - **INTERNAL_SERVER_ERROR**: This error is used when an unspecified error occurred on the `server`, and no other specific error code is applicable.
