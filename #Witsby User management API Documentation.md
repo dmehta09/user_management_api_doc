@@ -48,10 +48,11 @@ Please find below the detailed documentation for each query and mutation, along 
 #### **Endpoint**: `https://api.witsby.ascd.org/graphql`
 ​
 ### Account Creation using Witsby
-
 ​
 #### 1. Create Institution Account
-​
+
+This API provides a mutation to create a new institution.When new deal is `closed won` Sales Force will call this Witsby API. It allows to specify various details, including the institution's name, location, subscription information, status, total seat licenses purchased, etc. 
+
 - **GraphQL Mutation**:
 ​
     ```graphql
@@ -197,6 +198,8 @@ Please find below the detailed documentation for each query and mutation, along 
 
 #### 2. Update Institution Account (For renewal)
 ​
+This API provides a mutation to update an existing institution's information. When deal is `renewed` Sales Force will call this Witsby API. It allows you to modify various details, including the institution's name, location, subscription information, and status. 
+
 - **GraphQL Mutation**:
 ​
   ```graphql
@@ -344,6 +347,9 @@ Please find below the detailed documentation for each query and mutation, along 
 
 #### **1. Fetch Institution Account with Levels (structures) and Hierarchies (READ)**
 ​
+ API provides a query to retrieve detailed information about an institution based on its ID. The query returns various details, including the institution's basic information, subscription data, location, status, and additional hierarchical and structural data.
+ If a new institute is added, the status will be shown as `Pending Setup`.This will prompt the CST team to create the organization level and hierarchy.
+
 - **GraphQL Query**:
 ​
   ```graphql
@@ -551,16 +557,18 @@ Please find below the detailed documentation for each query and mutation, along 
   - 1.2 **Retrieve Institution Information without Authorization**
     - **Given**: User does not send an `Authorization` header.
     - **When**: User sends a query to retrieve institution information for the institution.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
   - 1.3 **Test with an invalid token**
     - **Given**: User sends an invalid `Authorization` header.
     - **When**: User sends a query to retrieve institution information for the institution.
-    - **Then**: Server responds with status `401 Unauthorized`.
+    - **Then**: Server responds with status `200 with an error message`.
 
 
 ​
 #### **2. Create/Update/Remove Level (structure)**
 ​
+This API provides a mutation to create/update/remove the organisation levels foThis API provides mutations for creating, updating, or removing organization `Levels` for institutions.
+
 - **GraphQL Mutation**:
 ​
   ```graphql
@@ -684,6 +692,8 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
 #### **3. Create or Update Organization Hierarchies**
 ​
+This API provides a mutation to create or update the organisation hierarchy of an institution. This includes its basic details, organizational structure, and hierarchical information.
+
 - **GraphQL Mutation**:
 ​
   ```graphql
@@ -808,7 +818,9 @@ Please find below the detailed documentation for each query and mutation, along 
     - **Then**: Server responds with status `200 with an error message`.
 
 
-#### **4. Fetch Districts (READ)
+#### **4. Fetch Districts or School (READ)
+
+While setting up the organisation hierachy this API provides a query to retrieve a list of custom District or School based on specified filters and record types. It returns comprehensive details about each custom District or School, including location, contact information, and attributes.
 
 - **GraphQL Query**:
 
@@ -908,9 +920,7 @@ Please find below the detailed documentation for each query and mutation, along 
             "Record_Type_Text": "District",
             "Institution_Name_Proper": "District Name",
             "Mailing_Addr1_Proper": "Address Line 1",
-            // Other fields...
           },
-          // Additional Districts...
         ],
         "totalCount": 100
       }
@@ -930,169 +940,30 @@ Please find below the detailed documentation for each query and mutation, along 
 
 - **Test Cases**
 
-- 4.1 **Fetch Districts with valid authorization**
+- 4.1 **Fetch Districts or School with valid authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
-    - **When**: User sends a GET request to fetch Districts.
-    - **Then**: Server responds with status `200 OK` and returns a list of Districts.
+    - **When**: User sends a GET request to fetch Districts or School.
+    - **Then**: Server responds with status `200 OK` and returns a list of Districts or School.
 
-- 4.2 **Fetch Districts without authorization**
+- 4.2 **Fetch Districts or School without authorization**
 
     - **Given**: User does not send an Authorization header.
-    - **When**: User sends a GET request to fetch Districts.
+    - **When**: User sends a GET request to fetch Districts or School.
     - **Then**: Server responds with status `200 with an error message`.
 
 - 4.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
-    - **When**: User sends a GET request to fetch Districts.
+    - **When**: User sends a GET request to fetch Districts or School.
     - **Then**: Server responds with status `200 with an error message`.
 
 - 4.4 **Perform searches with different filter criteria**
     - Perform tests with various combinations of filter criteria to ensure accurate search results.
 
-#### **5. Fetch Schools  (READ)
-
-- **GraphQL Query**:
-
- ```graphql
-    query GetCustomSchools($recordType: RecordType!, $filter: Filter!) {
-      getCustomSchools(recordType: $recordType, filter: $filter) {
-        schools {
-          _id
-          Inst_UID
-          Institution_Name_Proper
-          Mailing_Addr1_Proper
-          Mailing_Addr2_Proper
-          Mailing_City_Proper
-          Mailing_State_Full
-          Mailing_St
-          Mailing_ZIP_5
-          Mailing_ZIP
-          Phone
-          Main_Parent_UID
-          Parent_UID
-          Parent_Name_Proper
-          Country
-          Phone_Present
-          Grade_LO
-          Grade_Hi
-          School_Type
-          Record_Type
-          Grade_Level
-          Num_Schools
-          Record_Type_Text
-          School_Type_Text
-          Grade_Level_Text
-          NCES_LEAID
-          SCHNO
-          Date_Last_Changed
-          Institution_Long_Name
-          District_Type
-          Fax
-          URL
-          School_Yr_Start
-          School_Yr_End
-          Latitude
-          Longitude
-          Date_Added
-          Parent_Long_Name
-          Area_Code
-          Source
-          Inst_Status
-          Institution_Short_Name
-          District_Type_Text
-          Detailed_Grade_Level_Text
-          Inst_Status_Text
-          Main_Parent_Name_Proper
-        }
-        totalCount
-      }
-    }
-  ```
-
-  - **Input Type**:
-​
-    ```graphql
-      enum RecordType {
-        Building
-        District
-      }
-
-      input Filter {
-        page: Int = 0
-        limit: Int = 10
-        sortField: String
-        sortDirection: SortDirection
-        searchField: [String!]
-        searchText: String
-      }
-    ```
-
-- **Headers**:
-
-  - `Authorization`: Bearer token for authentication.
-  - `userinfo`: Encrypted user object
-  - `Content-Type`: application/graphql
-
-- **Rate Limits**: Depending on server configuration, e.g., 1000 requests per hour.
 
 
-- **Expected Response Format**:
+  #### **5. Fetching Country Listing (READ)
 
-  ```json
-  {
-    "data": {
-      "getCustomSchools": {
-        "schools": [
-          {
-            "_id": "123",
-            "Inst_UID": "YourInstUID",
-            "Record_Type_Text": "Building",
-            "Institution_Name_Proper": "School Name",
-            "Mailing_Addr1_Proper": "Address Line 1",
-            // Other fields...
-          },
-          // Additional Schools...
-        ],
-        "totalCount": 100
-      }
-    }
-  }
-  ```
-
-
-- **Error Handling**:
- - In case of errors, this API follows the standard GraphQL practice. The HTTP status code for all responses is `200 OK`. To check for errors, inspect the `error` field in the response JSON. If present, it contains details about the encountered issues. Refer to the `Common Error Handling` section at the end of document for a comprehensive understanding of error handling.
-
-
-- **Test Scenarios**
-  - Fetch Schools with valid authorization.
-  - Fetch Schools without valid authorization.
-  - Perform searches with different filter criteria.
-
-- **Test Cases**
-
-- 5.1 **Fetch Schools with valid authorization**
-    - **Given**: User is authorized and sends a valid Authorization header.
-    - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status `200 OK` and returns a list of Schools.
-
-- 5.2 **Fetch Schools without authorization**
-
-    - **Given**: User does not send an Authorization header.
-    - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status `200 with an error message`.
-
-- 5.3 **Test with an invalid token**
-    - **Given**: User sends an invalid Authorization header.
-    - **When**: User sends a GET request to fetch Schools.
-    - **Then**: Server responds with status `200 with an error message`.
-
-- 5.4 **Perform searches with different filter criteria**
-    - Perform tests with various combinations of filter criteria to ensure accurate search results.
-
-
-
-  #### **6. Fetching Country Listing (READ)
+This query allows you to retrieve a list of unique countries available in the system while setting up organisation hierarchy. It provides a simple and efficient way to obtain a list of countries for reference or selection in other parts of the application. 
 
 - **GraphQL Query**:
 
@@ -1121,7 +992,6 @@ Please find below the detailed documentation for each query and mutation, along 
         "China",
         "United Arab Emirates",
         "United States",
-        // other countries...
       ]
     }
   }
@@ -1140,24 +1010,26 @@ Please find below the detailed documentation for each query and mutation, along 
 
 - **Test Cases**
 
-- 6.1 **Fetch Unique Countries with Valid Authorization**
+- 5.1 **Fetch Unique Countries with Valid Authorization**
     - **Given**: User is authorized and sends a valid Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
     - **Then**: Server responds with status `200 OK` and returns a list of unique countries.
 
-- 6.2 **Fetch Unique Countries without Authorization**
+- 5.2 **Fetch Unique Countries without Authorization**
 
     - **Given**: User does not send an Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
     - **Then**: Server responds with status `200 OK` and returns a list of unique countries
 
-- 6.3 **Test with an invalid token**
+- 5.3 **Test with an invalid token**
     - **Given**: User sends an invalid Authorization header.
     - **When**: User sends a GET request to fetch unique countries.
     - **Then**: Server responds with status `200 with an error message`.
 
 
 #### **6. Fetching State Listing (READ)
+
+This query allows you to retrieve a list of unique states or regions within a specific country. You can specify the country as a parameter to obtain a list of states associated with that country. It provides a convenient way to fetch state or regional data for further use in your application. 
 
 - **GraphQL Query**:
 
@@ -1183,7 +1055,6 @@ Please find below the detailed documentation for each query and mutation, along 
     "data": {
       "getUniqueStates": [
         "Quebec",
-        // Other states or provinces...
       ]
     }
   }
@@ -1216,8 +1087,10 @@ Please find below the detailed documentation for each query and mutation, along 
     - **When**: User sends a GET request to fetch unique states for a specific country.
     - **Then**: Server responds with status `200 with an error message`.
 
-#### 7. Update Custom District
+#### 7. Update Custom District or School
 ​
+This mutation allows you to update the information of a District or school, including various attributes such as location, contact details, and educational parameters. The mutation takes an input with specific fields for updating District or school information. It provides a convenient way to make modifications to school records in the system. 
+
 - **GraphQL Mutation**:
 ​
     ```graphql
@@ -1283,7 +1156,6 @@ Please find below the detailed documentation for each query and mutation, along 
       status: String
       NCES_LEAID:String
       SCHNO: String
-      ... [other fields]
     }
     ```
 ​
@@ -1379,6 +1251,8 @@ Please find below the detailed documentation for each query and mutation, along 
 ​
 - **GraphQL Mutation**:
 ​
+This mutation allows to create a custom school or district by providing various details such as location, contact information, and educational parameters. The mutation takes an input with specific fields to create a new school or district record in the system. It provides a convenient way to add custom educational entities to the system. 
+
     ```graphql
     mutation Mutation($customSchoolAndDistrictInput: CustomSchoolAndDistrictInput!) {
       createCustomSchoolAndDistrict(CustomSchoolAndDistrictInput: $customSchoolAndDistrictInput) {
@@ -1441,7 +1315,6 @@ Please find below the detailed documentation for each query and mutation, along 
     institutionName: String!
     LEAID: String!
     recordType: RecordType!
-    ... [other fields]
   }
   ```
 ​
@@ -1545,10 +1418,12 @@ Please find below the detailed documentation for each query and mutation, along 
     - **Then**: Server responds with status `200 with an error message`.
 
 
-#### 10. Remove Custom District or School
+#### 9. Remove Custom District or School
 ​
 - **GraphQL Mutation**:
 ​
+This mutation allows to remove a school record from the system based on its unique identifier. Upon successful execution, the specified school's information will be deleted from the database. 
+
     ```graphql
     mutation RemoveSchool($removeSchoolId: String!) {
       removeSchool(id: $removeSchoolId) {
@@ -1680,19 +1555,19 @@ Please find below the detailed documentation for each query and mutation, along 
   
 - **Test Cases**
 ​
-  - **10.1 Remove School with Valid Authorization**
+  - **9.1 Remove School with Valid Authorization**
 ​
     - **Given**: User is authorized and sends a valid `Authorization` header with valid account data.
     - **When**: User sends a mutation to remove school information.
     - **Then**: Server responds with status `200 OK` and returns the removed custom school/district information.
 ​
-  - **8.2 Remove School without Authorization**
+  - **9.2 Remove School without Authorization**
 ​
     - **Given**: User does not send an `Authorization` header.
     - **When**: User sends a mutation to remove  a remove school or district.
     - **Then**: Server responds with status `200 with an error message`.
 ​
-  - **8.3 Test with an Invalid Token**
+  - **9.3 Test with an Invalid Token**
 ​
     - **Given**: User sends an invalid `Authorization `header.
     - **When**: User sends a mutation to remove  a custom school or district.
